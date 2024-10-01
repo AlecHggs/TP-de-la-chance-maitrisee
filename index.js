@@ -25,7 +25,10 @@ io.on('connection', (socket) => {
     const welcomeMessage = `Bienvenue ${username}, nous sommes ${users.length}`;
     socket.emit('welcome', welcomeMessage);
     const joinGameMessage = `${socketUser[socket.id]} a quitté.`;
-    socket.broadcast.emit('toast', 'danger', joinGameMessage);
+    socket.broadcast.emit('toast', 'success', joinGameMessage);
+    if(users.length > 2){
+      io.emit('game start');
+    }
   });
 
   socket.on('chat message', (msg) => {
