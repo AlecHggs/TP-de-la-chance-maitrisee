@@ -50,3 +50,36 @@ socket.on('game full', (fullMessage)=>{
     document.getElementById('welcomeMessage').innerHTML = fullMessage;
     homeButton.classList.remove('invisible');
 })
+
+socket.on('toast', (status, message)=>{
+    addToast(status, message);
+})
+
+function addToast(status, message){
+    const toastContainer = document.getElementById('toastContainer');
+    const delay = 5000; 
+
+    const toast = document.createElement('div');
+    toast.classList.add('toast');
+    toast.classList.add(`text-bg-${status}`);
+    toast.setAttribute('role', 'alert');
+    toast.setAttribute('aria-live', 'assertive');
+    toast.setAttribute('aria-atomic', 'true');
+    toast.setAttribute('data-bs-delay', delay);
+
+    toast.innerHTML = `
+        <div class="toast-body">
+            ${message}
+        </div>
+    `;
+
+    toastContainer.appendChild(toast);
+
+    const bootstrapToast = new bootstrap.Toast(toast);
+
+    bootstrapToast.show();
+
+    toast.addEventListener('hidden.bs.toast', ()=>{
+        toast.remove();
+    });
+}
