@@ -11,14 +11,16 @@ window.addEventListener('load', function() {
 var user = '';
 
 function submitUsername(){
-    const input = document.getElementById('UsenameInput');
+    const input = document.getElementById('UsernameInput');
     const username = input.value;
     if(username !== ""){
         socket.emit("username", username);
         user = username;
         input.value = '';
-        loginModal.hide()
-    } 
+        loginModal.hide();
+    } else {
+        loginError.classList.remove('d-none')
+    }
 }
 
 function sendMessage(){
