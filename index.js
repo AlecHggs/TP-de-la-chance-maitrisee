@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
   console.log('a user connected', socket.id)
 
   socket.on('username', (username) => {
-    if(users.length >= 3){
+    if(users.length >= 300){
       const welcomeMessage = `Bonjour ${username}, nous sommes ${users.length}. Nous ne pouvons pas vous ajouter à la partie`;
       socket.emit('game full', welcomeMessage);
     }else{
