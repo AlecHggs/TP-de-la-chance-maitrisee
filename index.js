@@ -13,6 +13,7 @@ const io = new Server(server,
 )
 
 let users = []
+let socketUser = {}
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id)
@@ -20,12 +21,23 @@ io.on('connection', (socket) => {
   socket.on('username', (username) => {
     console.log('Username received:', username);
     users.push(username)
+    socketUser[socket.id] = username
     const welcomeMessage = `Bienvenue ${username}, nous sommes ${users.length}`;
     socket.emit('welcome', welcomeMessage);
+    const joinGameMessage = `${socketUser[socket.id]} a quitté.`;
+    socket.broadcast.emit('toast', 'danger', joinGameMessage);
+  });
+
+  socket.on('chat message', (msg) => {
+    console.log('message: ' + msg); 
+    socket.broadcast.emit('chat message', msg);
   });
 
   socket.on('disconnect', () => {
     console.log('user disconnected', socket.id)
+    const leftGameMessage = `${socketUser[socket.id]} a quitté.`;
+    socket.broadcast.emit('toast', 'danger', leftGameMessage);
+    delete socketUser[socket.id];
   })
 })
 
