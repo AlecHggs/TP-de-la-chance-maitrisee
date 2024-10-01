@@ -36,14 +36,28 @@ socket.on('chat message', (username, message)=>{
 })
 
 function addMessage(username, message){
+    const name = document.createElement('div');
     const mess = document.createElement('div');
-    mess.innerHTML = username +': '+ message;
+    if(username === user){
+        mess.classList.add('my-message');
+        name.classList.add('my-name');
+    }else{
+        mess.classList.add('incoming-message')
+        name.classList.add('sender-name');
+    }
+    name.innerHTML = username;
+
+    mess.innerHTML = message;
+    document.getElementById('chatBox').appendChild(name);
     document.getElementById('chatBox').appendChild(mess);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 socket.on('welcome', (welcomeMessage)=>{
     document.getElementById('welcomeMessage').innerHTML = welcomeMessage;
     chatWindow.classList.remove('invisible');
+    cardWindow.classList.remove('invisible');
+    navBar.classList.remove('invisible');
 })
 
 socket.on('game full', (fullMessage)=>{
@@ -83,3 +97,12 @@ function addToast(status, message){
         toast.remove();
     });
 }
+
+// event listeners
+
+document.getElementById('ChatInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage();
+    }
+});

@@ -1,0 +1,58 @@
+.chat-box {
+    height: 300px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+  }
+  .my-message {
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: lightgray;
+    border-radius: 5px;
+    width: fit-content;
+    align-self: flex-end;
+    text-align: right;
+  }
+  .incoming-message {
+    padding: 8px;
+    margin-bottom: 8px;
+    background-color: lightblue;
+    border-radius: 5px;
+    width: fit-content;
+    align-self: flex-start;
+    text-align: left;
+  }
+
+  .my-name {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #6c757d;
+    margin-bottom: 4px;
+    align-self: flex-end;
+    text-align: right;
+  }
+
+  .sender-name {
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #6c757d;
+    margin-bottom: 4px;
+    align-self: flex-start;
+    text-align: left;
+  }
+
+  .card-height {
+    height: 429px;
+  }
+  
+  .card-header {
+    background-color: lightblue;
+  }
+
+  .btn-custom {
+    background-color: lightblue;
+  }
