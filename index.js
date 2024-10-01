@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
   socket.on('username', (username) => {
     if(users.length > 3){
       const welcomeMessage = `Bonjour ${username}, nous sommes ${users.length}. Nous ne pouvons pas vous ajouter à la partie`;
-      socket.emit('welcome', welcomeMessage);
+      socket.emit('game full', welcomeMessage);
     }else{
       socket.join(roomId);
       console.log('Username received:', username);
@@ -45,9 +45,12 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('user disconnected', socket.id)
-    const leftGameMessage = `${socketUser[socket.id]} a quitté.`;
-    socket.to(roomId).emit('toast', 'success', leftGameMessage);
-    delete socketUser[socket.id];
+    const isInRoom = socket.rooms.has(roomId);
+    if (isInRoom) {
+      const leftGameMessage = `${socketUser[socket.id]} a quitté.`;
+      socket.to(roomId).emit('toast', 'danger', leftGameMessage);
+      delete socketUser[socket.id];
+    }
   })
 })
 
