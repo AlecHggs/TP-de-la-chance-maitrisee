@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
       socketUser[socket.id] = username
       const welcomeMessage = `Bienvenue ${username}, nous sommes ${users.length}`;
       socket.emit('welcome', welcomeMessage);
-      const joinGameMessage = `${socketUser[socket.id]} a quitté.`;
+      const joinGameMessage = `${socketUser[socket.id]} a rejoint.`;
       socket.to(roomId).emit('toast', 'success', joinGameMessage);
       if(users.length > 2){
         io.to(roomId).emit('game start');
