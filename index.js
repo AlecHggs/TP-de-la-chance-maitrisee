@@ -19,8 +19,8 @@ let solde = {}
 let gameStarted = false
 let round = 0
 let betList = []
-let roundStartDelay = 30000
-let roundEndDelay = 10000
+let roundStartDelay = 10000
+let roundEndDelay = 5000
 console.log("ready")
 
 io.on('connection', (socket) => {
@@ -131,12 +131,12 @@ io.on('connection', (socket) => {
     }
     for (const [key, value] of Object.entries(solde)) {
       console.log(`Key: ${key}, Value: ${value}`);
-      diff = soldeBefore[key] - value;
+      var diff = soldeBefore[key] - value;
       if(diff > 0){
-        msg = `${key} a gagné ${diff} Kishta ce round`
+        var msg = `${key} a gagné ${diff} Kishta ce round`
         io.to(roomId).emit('result message', 'success', msg);
       }else if(diff < 0){
-        msg = `${key} a perdu ${diff *-1} Kishta ce round`
+        var msg = `${key} a perdu ${diff *-1} Kishta ce round`
         io.to(roomId).emit('result message', 'danger', msg);
       }
       solde[key] += 10;
