@@ -98,7 +98,7 @@ io.on('connection', (socket) => {
   
         setTimeout(() => {
           console.log("résultats");
-          playGame(count++);
+          playGame(round++);
   
         }, 30000); // Attend 30 secondes après "End"
   
