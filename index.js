@@ -18,6 +18,7 @@ let roomId = "UniqueId"
 let solde = {}
 let gameStarted = false
 let round = 0
+let betList = []
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id)
@@ -64,15 +65,18 @@ io.on('connection', (socket) => {
         socket.emit('solde', solde[socketUser[socket.id]]);
         const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
         socket.to(roomId).emit('toast', 'primary', betGameMessage);
+        betList.push({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme})
       } else{
-        const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
+        const betGameMessage = `${socketUser[socket.id]} vous n'avez pas assez pour parier ${somme} sur ${pileOuFace}.`;
         socket.emit('toast', 'primary', betGameMessage);
+        socket.emit('solde', solde[socketUser[socket.id]]);
       }
     }else{
       solde[socketUser[socket.id]] = 100;
       solde[socketUser[socket.id]] -= somme
       socket.emit('solde', solde[socketUser[socket.id]]);
       const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
+      betList.push({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme})
       socket.to(roomId).emit('toast', 'primary', betGameMessage);
     }
   })
