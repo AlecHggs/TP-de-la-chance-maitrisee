@@ -114,6 +114,7 @@ io.on('connection', (socket) => {
           io.to(roomId).emit('final result', sortedDict);
           solde = {}
           betList = []
+          users = []
         }
         setTimeout(() => {
           playGame(round);
