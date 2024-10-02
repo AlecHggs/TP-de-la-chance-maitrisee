@@ -124,7 +124,7 @@ io.on('connection', (socket) => {
         solde[socketUser[bet["user"]]] -= bet["somme"] * 2
       }
     }
-    for (const key of Object.keys(solde)) {
+    for (const key in solde) {
       console.log(Object.keys(solde))
       console.log(`Key: ${key}, Value: ${solde[key]}`);
       var diff = soldeBefore[key] - solde[key];
