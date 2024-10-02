@@ -108,7 +108,7 @@ io.on('connection', (socket) => {
         gameStarted = false
         computeResults()
         if (round == 3){
-          const sortedEntries = Object.entries(dict).sort(([, valueA], [, valueB]) => valueA - valueB);
+          const sortedEntries = Object.entries(solde).sort(([, valueA], [, valueB]) => valueA - valueB);
           const sortedDict = Object.fromEntries(sortedEntries);
           io.to(roomId).emit('final result', sortedDict);
           solde = {}
