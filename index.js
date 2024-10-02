@@ -15,6 +15,9 @@ const io = new Server(server,
 let users = []
 let socketUser = {}
 let roomId = "UniqueId"
+let solde = {}
+let gameStarted = false
+let round = 0
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id)
@@ -31,7 +34,7 @@ io.on('connection', (socket) => {
       const welcomeMessage = `Bienvenue ${username}`;
       socket.emit('welcome', welcomeMessage);
       const counterMessage = `nous sommes ${username.length}`;
-      io.to(roomId).emit.emit('user counter', counterMessage);
+      io.to(roomId).emit('user counter', counterMessage);
       const joinGameMessage = `${socketUser[socket.id]} a rejoint.`;
       socket.to(roomId).emit('toast', 'success', joinGameMessage);
       if(users.length > 2){
@@ -45,6 +48,11 @@ io.on('connection', (socket) => {
     socket.to(roomId).emit('chat message', socketUser[socket.id], msg);
   });
 
+  socket.on('solde', () =>{
+    if(solde[socketUser[socket.id]]){
+      socket.emit('solde', solde[socketUser[socket.id]]);
+    }
+  })
   socket.on('disconnect', () => {
     console.log('user disconnected', socket.id)
     const leftGameMessage = `${socketUser[socket.id]} a quitté.`;
