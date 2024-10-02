@@ -58,9 +58,6 @@ io.on('connection', (socket) => {
   socket.on('solde', () =>{
     if(solde[socketUser[socket.id]]){
       socket.emit('solde', solde[socketUser[socket.id]]);
-    }else{
-      solde[socketUser[socket.id]] = 100;
-      socket.emit('solde', solde[socketUser[socket.id]]);
     }
   })
 
@@ -112,10 +109,10 @@ io.on('connection', (socket) => {
           const sortedEntries = Object.entries(solde).sort(([, valueA], [, valueB]) => valueB - valueA);
           const sortedDict = Object.fromEntries(sortedEntries);
           io.to(roomId).emit('final result', sortedDict);
-          solde = {}
-          betList = []
-          users = []
-          socketUser = {}
+          solde = {};
+          betList = [];
+          users = [];
+          socketUser = {};
         }
         setTimeout(() => {
           playGame(round);
