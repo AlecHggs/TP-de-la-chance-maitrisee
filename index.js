@@ -124,9 +124,9 @@ io.on('connection', (socket) => {
         solde[socketUser[bet["user"]]] -= bet["somme"] * 2
       }
     }
-    for (const [key, value] of Object.entries(solde)) {
-      console.log(`Key: ${key}, Value: ${value}`);
-      var diff = soldeBefore[key] - value;
+    for (const key of Object.keys(solde)) {
+      console.log(`Key: ${key}, Value: ${solde[key]}`);
+      var diff = soldeBefore[key] - solde[key];
       if(diff > 0){
         var msg = `${key} a gagné ${diff} Kishta ce round`
         io.to(roomId).emit('result message', 'success', msg);
