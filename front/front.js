@@ -71,6 +71,29 @@ socket.on('game full', (fullMessage)=>{
 socket.on('toast', (status, message)=>{
     addToast(status, message);
 })
+socket.on('round start', (timeLeft, message)=>{
+    startTimer(timeLeft, message);
+})
+
+function startTimer(timeLeft, message) {
+    const timerElement = document.getElementById('timerDisplay');
+    var timeLeft = Math.floor(timeLeft / 1000)
+    const interval = setInterval(
+        function() {
+            if (timeLeft < 10) {
+                timeLeft = '0' + timeLeft;
+            }
+
+            timerElement.innerHTML = `${message} ${timeLeft} secondes`;
+
+            timeLeft--;
+
+            if (timeLeft < 0) {
+                clearInterval(interval);
+                timerElement.innerHTML = "Round finie!";
+            }
+    }, 1000)
+};
 
 function addToast(status, message){
     const toastContainer = document.getElementById('toastContainer');
