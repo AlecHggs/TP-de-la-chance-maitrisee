@@ -97,7 +97,7 @@ io.on('connection', (socket) => {
       io.to(roomId).emit('round status', roundStartDelay, "Temps restant ");
       gameStarted = true
       setTimeout(() => {
-        if(round < 3){
+//        if(round < 3){
           console.log("End");
           io.to(roomId).emit('round status', roundEndDelay, "Prochain round dans ");
           gameStarted = false
@@ -106,13 +106,13 @@ io.on('connection', (socket) => {
             computeResults()
             playGame(round);
           }, roundEndDelay);
-        }else{
-          console.log("End");
-          io.to(roomId).emit('round status', 3000, "Partie terminée ");
-          gameStarted = false
-          console.log("résultats");
-          computeResults()
-        }
+//        }else{
+//          console.log("End");
+//          io.to(roomId).emit('round status', 3000, "Partie terminée ");
+//          gameStarted = false
+//          console.log("résultats");
+//          computeResults()
+//        }
       }, roundStartDelay);
     }
   }
