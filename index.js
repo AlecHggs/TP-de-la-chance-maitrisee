@@ -19,8 +19,8 @@ let solde = {}
 let gameStarted = false
 let round = 0
 let betList = []
-let roundStartDelay = 50000
-let roundEndDelay = 30000
+let roundStartDelay = 1000
+let roundEndDelay = 1000
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id)
