@@ -28,8 +28,10 @@ io.on('connection', (socket) => {
       console.log('Username received:', username);
       users.push(username)
       socketUser[socket.id] = username
-      const welcomeMessage = `Bienvenue ${username}, nous sommes ${users.length}`;
+      const welcomeMessage = `Bienvenue ${username}`;
       socket.emit('welcome', welcomeMessage);
+      const counterMessage = `nous sommes ${username.length}`;
+      io.to(roomId).emit.emit('user counter', counterMessage);
       const joinGameMessage = `${socketUser[socket.id]} a rejoint.`;
       socket.to(roomId).emit('toast', 'success', joinGameMessage);
       if(users.length > 2){
