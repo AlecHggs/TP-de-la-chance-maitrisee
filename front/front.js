@@ -1,15 +1,19 @@
+// Initiate connection
 const socket = io('http://localhost:3000')
 socket.on('connect', () => {
   console.log('connected')
 })
+
 var loginModal = new bootstrap.Modal(document.getElementById('login'));
 
 window.addEventListener('load', function() {
-    loginModal.show();
+    loginModal.show(); 
 });
 
 var user = '';
 var user_points = 100;
+
+// Fonctions
 
 function submitUsername(){
     const input = document.getElementById('UsernameInput');
@@ -34,10 +38,6 @@ function sendMessage(){
     }
 }
 
-socket.on('chat message', (username, message)=>{
-    addMessage(username, message)
-})
-
 function addMessage(username, message){
     const name = document.createElement('div');
     const mess = document.createElement('div');
@@ -55,26 +55,6 @@ function addMessage(username, message){
     document.getElementById('chatBox').appendChild(mess);
     chatBox.scrollTop = chatBox.scrollHeight;
 }
-
-socket.on('welcome', (welcomeMessage)=>{
-    document.getElementById('welcomeMessage').innerHTML = welcomeMessage;
-    chatWindow.classList.remove('invisible');
-    cardWindow.classList.remove('invisible');
-    navBar.classList.remove('invisible');
-})
-
-socket.on('game full', (fullMessage)=>{
-    document.getElementById('welcomeMessage').innerHTML = fullMessage;
-    homeButton.classList.remove('invisible');
-})
-
-socket.on('toast', (status, message)=>{
-    addToast(status, message);
-})
-
-socket.on('round status', (timeLeft, message)=>{
-    startTimer(timeLeft, message);
-})
 
 function startTimer(timeLeft, message) {
     const timerElement = document.getElementById('timerDisplay');
@@ -151,42 +131,6 @@ function onBetSubmit(betValue){
     return socket.emit('parier', 'face', betValue);
 }
 
-socket.on('solde', (value)=>{
-    user_points = value;
-
-    changeButtonStates();
-
-    userPointDisplay.innerHTML = `Vos points restants: ${user_points}`;
-})
-
-socket.on('game start', ()=>{
-    document.getElementById('gameWindow').classList.remove('d-none');
-})
-
-socket.on('user counter', (message)=>{
-    userCountMessage.innerHTML = message;
-})
-
-socket.on('result', (message)=>{
-    addRoundStatusMessage(message, 'primary');
-    socket.emit('solde');
-})
-
-socket.on('result message', (status, message)=>{
-    addRoundStatusMessage(message, status);
-})
-
-socket.on('round counter', (roundNum)=>{
-    RoundCounter.innerHTML = `Round ${roundNum}`;
-})
-
-socket.on('final result', (result)=>{
-    console.log(result);
-    addResultsToModal(result);
-    var resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
-    resultModal.show();
-})
-
 function addRoundStatusMessage(message, status){
     const mess = document.createElement('div');
 
@@ -227,6 +171,69 @@ function changeButtonStates(){
         );
     })
 }
+
+// Socket actions
+
+socket.on('chat message', (username, message)=>{
+    addMessage(username, message)
+})
+
+socket.on('welcome', (welcomeMessage)=>{
+    document.getElementById('welcomeMessage').innerHTML = welcomeMessage;
+    chatWindow.classList.remove('invisible');
+    cardWindow.classList.remove('invisible');
+    navBar.classList.remove('invisible');
+})
+
+socket.on('game full', (fullMessage)=>{
+    document.getElementById('welcomeMessage').innerHTML = fullMessage;
+    homeButton.classList.remove('invisible');
+})
+
+socket.on('toast', (status, message)=>{
+    addToast(status, message);
+})
+
+socket.on('round status', (timeLeft, message)=>{
+    startTimer(timeLeft, message);
+})
+
+socket.on('solde', (value)=>{
+    user_points = value;
+
+    changeButtonStates();
+
+    userPointDisplay.innerHTML = `Vos points restants: ${user_points}`;
+})
+
+socket.on('game start', ()=>{
+    document.getElementById('gameWindow').classList.remove('d-none');
+})
+
+socket.on('user counter', (message)=>{
+    userCountMessage.innerHTML = message;
+})
+
+socket.on('result', (message)=>{
+    addRoundStatusMessage(message, 'primary');
+    socket.emit('solde');
+})
+
+socket.on('result message', (status, message)=>{
+    addRoundStatusMessage(message, status);
+})
+
+socket.on('round counter', (roundNum)=>{
+    RoundCounter.innerHTML = `Round ${roundNum}`;
+})
+
+socket.on('final result', (result)=>{
+    console.log(result);
+    addResultsToModal(result);
+    var resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+    resultModal.show();
+})
+
 // event listeners
 
 document.getElementById('ChatInput').addEventListener('keypress', function(event) {
