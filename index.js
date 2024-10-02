@@ -91,28 +91,23 @@ io.on('connection', (socket) => {
 
   function playGame(round) {
     if (round <= 2) {
-      io.to(roomId).emit('round counter', round++);
       round++
+      io.to(roomId).emit('round counter', round);
       console.log("round start");
       io.to(roomId).emit('round status', roundStartDelay, "Temps restant ");
       gameStarted = true
       setTimeout(() => {
-//        if(round < 3){
-          console.log("End");
+        console.log("End");
+        if (round == 3){
+          io.to(roomId).emit('round status', roundEndDelay, "Fin de partie dans ");
+        }else{
           io.to(roomId).emit('round status', roundEndDelay, "Prochain round dans ");
-          gameStarted = false
-          setTimeout(() => {
-            console.log("résultats");
-            computeResults()
-            playGame(round);
-          }, roundEndDelay);
-//        }else{
-//          console.log("End");
-//          io.to(roomId).emit('round status', 3000, "Partie terminée ");
-//          gameStarted = false
-//          console.log("résultats");
-//          computeResults()
-//        }
+        }
+        gameStarted = false
+        computeResults()
+        setTimeout(() => {
+          playGame(round);
+        }, roundEndDelay);
       }, roundStartDelay);
     }
   }
