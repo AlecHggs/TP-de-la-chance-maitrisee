@@ -71,7 +71,8 @@ socket.on('game full', (fullMessage)=>{
 socket.on('toast', (status, message)=>{
     addToast(status, message);
 })
-socket.on('round start', (timeLeft, message)=>{
+
+socket.on('round status', (timeLeft, message)=>{
     startTimer(timeLeft, message);
 })
 
@@ -90,7 +91,7 @@ function startTimer(timeLeft, message) {
 
             if (timeLeft < 0) {
                 clearInterval(interval);
-                timerElement.innerHTML = "Round finie!";
+                timerElement.innerHTML = "Partie finie!";
             }
     }, 1000)
 };
@@ -136,7 +137,7 @@ function onBetType(betType) {
     }else {
         const elementClassList = document.getElementById('tails').classList;
         const oppositeElementClassList = document.getElementById('heads').classList
-        document.getElementById('tails').classList.add('active');
+        elementClassList.add('active');
         if (oppositeElementClassList.contains('active')){
             oppositeElementClassList.remove('active')
         }
@@ -154,6 +155,7 @@ socket.on('solde', (value)=>{
     user_points = value;
 
     const betButtonArray = Array.from(document.getElementsByClassName('betButton'));
+
     betButtonArray.forEach((button)=>{
         if (button.innerHTML > user_points){
             button.setAttribute("disabled", true)
@@ -172,6 +174,28 @@ socket.on('user counter', (message)=>{
     userCountMessage.innerHTML = message;
 })
 
+socket.on('result', (message)=>{
+    addRoundStatusMessage(message);
+})
+
+socket.on('result message', (status, message)=>{
+    console.log(message);
+    addRoundStatusMessage(message);
+})
+
+socket.on('round counter', (roundNum)=>{
+    RoundCounter.innerHTML = `Round ${roundNum}`;
+})
+
+function addRoundStatusMessage(message){
+    const mess = document.createElement('div');
+
+    mess.innerHTML = message;
+    mess.classList.add('align-self-center');
+    mess.classList.add('fst-italic');
+    document.getElementById('chatBox').appendChild(mess);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
 // event listeners
 
 document.getElementById('ChatInput').addEventListener('keypress', function(event) {
