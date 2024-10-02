@@ -93,28 +93,58 @@ io.on('connection', (socket) => {
 
   function playGame(round) {
     if (round <= 2) {
-      io.to(roomId).emit('round counter', round);
+      io.to(roomId).emit('round counter', round++);
       round++
       console.log("round start");
       io.to(roomId).emit('round status', roundStartDelay, "Temps restant ");
       gameStarted = true
       setTimeout(() => {
-        if(round <= 2){
+        if(round < 3){
           console.log("End");
           io.to(roomId).emit('round status', roundEndDelay, "Prochain round dans ");
           gameStarted = false
           setTimeout(() => {
             console.log("résultats");
+            computeResults()
             playGame(round);
           }, roundEndDelay);
         }else{
           console.log("End");
           io.to(roomId).emit('round status', 3000, "Partie terminée ");
           gameStarted = false
-          // Compute results
+          console.log("résultats");
+          computeResults()
         }
       }, roundStartDelay);
     }
+  }
+
+  function computeResults(){
+    result = Math.random() < 0.5 ? 'pile' : 'face';
+    const resultMessage = `Le résultat est ${result}`;
+    io.to(roomId).emit('result', resultMessage);
+    soldeBefore = solde
+    for(bet in betList){
+      if(bet["side"]==result){
+        solde[socketUser[bet["user"]]] += bet["somme"] * 2
+      }else{
+        solde[socketUser[bet["user"]]] -= bet["somme"] * 2
+      }
+    }
+    for (const [key, value] of Object.entries(solde)) {
+      console.log(`Key: ${key}, Value: ${value}`);
+      diff = soldeBefore[key] - value;
+      if(diff > 0){
+        msg = `${key} a gagné ${diff} Kishta ce round`
+        io.to(roomId).emit('result message', 'success', msg);
+      }else if(diff < 0){
+        msg = `${key} a perdu ${diff *-1} Kishta ce round`
+        io.to(roomId).emit('result message', 'danger', msg);
+      }
+      solde[key] += 10;
+    }
+    betList = []
+    // Front ask new solde
   }
 
   socket.on('disconnect', () => {
