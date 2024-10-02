@@ -19,7 +19,7 @@ var solde = {}
 let gameStarted = false
 let round = 0
 let betList = []
-let roundStartDelay = 10000
+let roundStartDelay = 20000
 let roundEndDelay = 5000
 console.log("ready")
 
