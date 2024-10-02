@@ -40,6 +40,9 @@ io.on('connection', (socket) => {
       socket.to(roomId).emit('toast', 'success', joinGameMessage);
       if(users.length > 2){
         io.to(roomId).emit('game start');
+        while(round <= 2){
+          round++;
+        }
       }
     }
   });
@@ -65,7 +68,8 @@ io.on('connection', (socket) => {
         socket.emit('solde', solde[socketUser[socket.id]]);
         const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
         socket.to(roomId).emit('toast', 'primary', betGameMessage);
-        betList.push({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme})
+        betList.push({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
+        console.log({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
       } else{
         const betGameMessage = `${socketUser[socket.id]} vous n'avez pas assez pour parier ${somme} sur ${pileOuFace}.`;
         socket.emit('toast', 'primary', betGameMessage);
@@ -76,7 +80,8 @@ io.on('connection', (socket) => {
       solde[socketUser[socket.id]] -= somme
       socket.emit('solde', solde[socketUser[socket.id]]);
       const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
-      betList.push({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme})
+      betList.push({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
+      console.log({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
       socket.to(roomId).emit('toast', 'primary', betGameMessage);
     }
   })
