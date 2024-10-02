@@ -15,7 +15,7 @@ const io = new Server(server,
 let users = []
 let socketUser = {}
 let roomId = "UniqueId"
-let solde = {}
+var solde = {}
 let gameStarted = false
 let round = 0
 let betList = []
@@ -40,6 +40,8 @@ io.on('connection', (socket) => {
       io.to(roomId).emit('user counter', counterMessage);
       const joinGameMessage = `${socketUser[socket.id]} a rejoint.`;
       socket.to(roomId).emit('toast', 'success', joinGameMessage);
+      solde[socketUser[socket.id]] = 100;
+      socket.emit('solde', solde[socketUser[socket.id]]);
       if(users.length > 2){
         io.to(roomId).emit('game start');
         playGame(round);
@@ -116,24 +118,27 @@ io.on('connection', (socket) => {
     var result = Math.random() < 0.5 ? 'pile' : 'face';
     const resultMessage = `Le résultat est ${result}`;
     io.to(roomId).emit('result', resultMessage);
-    var soldeBefore = solde
+    const soldeBefore = structuredClone(solde);
+    
     for(var bet in betList){
-      if(bet["side"]==result){
-        solde[socketUser[bet["user"]]] += bet["somme"] * 2
-      }else{
-        solde[socketUser[bet["user"]]] -= bet["somme"] * 2
+      if(betList[bet]["side"]==result){
+        solde[socketUser[betList[bet]["user"]]] += betList[bet]["amount"] * 2
+        console.log("gagné")
       }
+      soldeBefore[socketUser[betList[bet]["user"]]] += betList[bet]["amount"]
     }
+
     for (const key in solde) {
-      console.log(Object.keys(solde))
       console.log(`Key: ${key}, Value: ${solde[key]}`);
-      var diff = soldeBefore[key] - solde[key];
-      if(diff > 0){
+      var diff = solde[key] - soldeBefore[key];
+      if(diff > 0 && key){
         var msg = `${key} a gagné ${diff} Kishta ce round`
         io.to(roomId).emit('result message', 'success', msg);
-      }else if(diff < 0){
-        var msg = `${key} a perdu ${diff *-1} Kishta ce round`
+        console.log(msg)
+      }else if(diff < 0 && key){
+        var msg = `${key} a perdu ${diff} Kishta ce round`
         io.to(roomId).emit('result message', 'danger', msg);
+        console.log(msg)
       }
       solde[key] += 10;
     }
