@@ -154,14 +154,7 @@ function onBetSubmit(betValue){
 socket.on('solde', (value)=>{
     user_points = value;
 
-    const betButtonArray = Array.from(document.getElementsByClassName('betButton'));
-
-    betButtonArray.forEach((button)=>{
-        if (button.innerHTML > user_points){
-            button.setAttribute("disabled", true)
-        }
-        
-    })
+    changeButtonStates();
 
     userPointDisplay.innerHTML = `Vos points restants: ${user_points}`;
 })
@@ -175,26 +168,64 @@ socket.on('user counter', (message)=>{
 })
 
 socket.on('result', (message)=>{
-    addRoundStatusMessage(message);
+    addRoundStatusMessage(message, 'primary');
+    socket.emit('solde');
 })
 
 socket.on('result message', (status, message)=>{
-    console.log(message);
-    addRoundStatusMessage(message);
+    addRoundStatusMessage(message, status);
 })
 
 socket.on('round counter', (roundNum)=>{
     RoundCounter.innerHTML = `Round ${roundNum}`;
 })
 
-function addRoundStatusMessage(message){
+socket.on('final result', (result)=>{
+    console.log(result);
+    addResultsToModal(result);
+    var resultModal = new bootstrap.Modal(document.getElementById('resultModal'));
+    resultModal.show();
+})
+
+function addRoundStatusMessage(message, status){
     const mess = document.createElement('div');
 
     mess.innerHTML = message;
     mess.classList.add('align-self-center');
     mess.classList.add('fst-italic');
+    if(status === 'danger'){
+        mess.classList.add('text-danger');
+    }else if(status === 'success'){
+        mess.classList.add('text-success')
+    }
     document.getElementById('chatBox').appendChild(mess);
     chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function addResultsToModal(result){
+    let result_container = document.getElementById('resultContainer');
+    const ul = document.createElement('ul');
+
+    for (let key in result) {
+        if (result.hasOwnProperty(key)) {
+            const li = document.createElement('li');
+            li.textContent = `${key}: ${result[key]}`;
+            ul.appendChild(li);
+        }
+    }
+    result_container.appendChild(ul);
+}
+
+function changeButtonStates(){
+    const betButtonArray = Array.from(document.getElementsByClassName('betButton'));
+
+    betButtonArray.forEach((button)=>{
+        if (button.innerHTML > user_points){
+            button.setAttribute("disabled", true)
+        } else (
+            button.removeAttribute("disabled")
+        );
+    })
 }
 // event listeners
 
