@@ -115,6 +115,7 @@ io.on('connection', (socket) => {
           solde = {}
           betList = []
           users = []
+          socketUser = {}
         }
         setTimeout(() => {
           playGame(round);
