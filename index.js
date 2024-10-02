@@ -125,6 +125,7 @@ io.on('connection', (socket) => {
       }
     }
     for (const key of Object.keys(solde)) {
+      console.log(Object.keys(solde))
       console.log(`Key: ${key}, Value: ${solde[key]}`);
       var diff = soldeBefore[key] - solde[key];
       if(diff > 0){
