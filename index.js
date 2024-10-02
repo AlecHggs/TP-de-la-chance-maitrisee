@@ -107,10 +107,14 @@ io.on('connection', (socket) => {
   }
 
   socket.on('disconnect', () => {
-    console.log('user disconnected', socket.id)
-    const leftGameMessage = `${socketUser[socket.id]} a quitté.`;
-    socket.to(roomId).emit('toast', 'danger', leftGameMessage);
-    delete socketUser[socket.id];
+    if(socketUser[socket.id]){
+      console.log('user disconnected', socket.id)
+      const leftGameMessage = `${socketUser[socket.id]} a quitté.`;
+      socket.to(roomId).emit('toast', 'danger', leftGameMessage);
+      delete socketUser[socket.id];
+      const counterMessage = `nous sommes ${username.length}`;
+      io.to(roomId).emit('user counter', counterMessage);
+    }
   })
 })
 
