@@ -44,6 +44,7 @@ io.on('connection', (socket) => {
       socket.emit('solde', solde[socketUser[socket.id]]);
       if(users.length > 2){
         io.to(roomId).emit('game start');
+        round = 0;
         playGame(round);
       }
     }
@@ -112,7 +113,6 @@ io.on('connection', (socket) => {
           const sortedDict = Object.fromEntries(sortedEntries);
           io.to(roomId).emit('final result', sortedDict);
           solde = {}
-          round = 0
           betList = []
         }
         setTimeout(() => {
