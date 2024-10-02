@@ -19,6 +19,8 @@ let solde = {}
 let gameStarted = false
 let round = 0
 let betList = []
+let roundStartDelay = 50000
+let roundEndDelay = 30000
 
 io.on('connection', (socket) => {
   console.log('a user connected', socket.id)
@@ -90,19 +92,20 @@ io.on('connection', (socket) => {
 
   function playGame(round) {
     if (round <= 2) {
-      console.log("start");
+      console.log("round start");
+      io.to(roomId).emit('round start', roundStartDelay);
       gameStarted = true
       setTimeout(() => {
         console.log("End");
+        io.to(roomId).emit('round start', roundEndDelay);
         gameStarted = false
-  
         setTimeout(() => {
           console.log("résultats");
           playGame(round++);
   
-        }, 30000); // Attend 30 secondes après "End"
+        }, roundEndDelay); // Attend 30 secondes après "End"
   
-      }, 50000); // Attend 50 secondes après "start"
+      }, roundStartDelay); // Attend 50 secondes après "start"
     }
   }
 
