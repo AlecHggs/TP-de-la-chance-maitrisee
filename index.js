@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
       socketUser[socket.id] = username
       const welcomeMessage = `Bienvenue ${username}`;
       socket.emit('welcome', welcomeMessage);
-      const counterMessage = `nous sommes ${username.length}`;
+      const counterMessage = `nous sommes ${users.length}`;
       io.to(roomId).emit('user counter', counterMessage);
       const joinGameMessage = `${socketUser[socket.id]} a rejoint.`;
       socket.to(roomId).emit('toast', 'success', joinGameMessage);
@@ -112,7 +112,8 @@ io.on('connection', (socket) => {
       const leftGameMessage = `${socketUser[socket.id]} a quitté.`;
       io.to(roomId).emit('toast', 'danger', leftGameMessage);
       delete socketUser[socket.id];
-      const counterMessage = `nous sommes ${username.length}`;
+      users.pop(socketUser[socket.id])
+      const counterMessage = `nous sommes ${users.length}`;
       io.to(roomId).emit('user counter', counterMessage);
     }
   })
