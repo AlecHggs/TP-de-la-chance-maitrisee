@@ -51,8 +51,32 @@ io.on('connection', (socket) => {
   socket.on('solde', () =>{
     if(solde[socketUser[socket.id]]){
       socket.emit('solde', solde[socketUser[socket.id]]);
+    }else{
+      solde[socketUser[socket.id]] = 100;
+      socket.emit('solde', solde[socketUser[socket.id]]);
     }
   })
+
+  socket.on('parier', (pileOuFace, somme) =>{
+    if(solde[socketUser[socket.id]]){
+      if (solde[socketUser[socket.id]] >= somme){
+        solde[socketUser[socket.id]] -= somme
+        socket.emit('solde', solde[socketUser[socket.id]]);
+        const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
+        socket.to(roomId).emit('toast', 'primary', betGameMessage);
+      } else{
+        const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
+        socket.emit('toast', 'primary', betGameMessage);
+      }
+    }else{
+      solde[socketUser[socket.id]] = 100;
+      solde[socketUser[socket.id]] -= somme
+      socket.emit('solde', solde[socketUser[socket.id]]);
+      const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
+      socket.to(roomId).emit('toast', 'primary', betGameMessage);
+    }
+  })
+
   socket.on('disconnect', () => {
     console.log('user disconnected', socket.id)
     const leftGameMessage = `${socketUser[socket.id]} a quitté.`;
