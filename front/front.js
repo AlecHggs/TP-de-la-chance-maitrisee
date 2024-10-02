@@ -9,6 +9,7 @@ window.addEventListener('load', function() {
 });
 
 var user = '';
+var user_points = 100;
 
 function submitUsername(){
     const input = document.getElementById('UsernameInput');
@@ -99,6 +100,54 @@ function addToast(status, message){
         toast.remove();
     });
 }
+
+function onBetType(betType) {
+    if(betType === "heads"){
+        const elementClassList = document.getElementById('heads').classList;
+        const oppositeElementClassList = document.getElementById('tails').classList
+        elementClassList.add('active');
+
+        if (oppositeElementClassList.contains('active')){
+            oppositeElementClassList.remove('active')
+        }
+    }else {
+        const elementClassList = document.getElementById('tails').classList;
+        const oppositeElementClassList = document.getElementById('heads').classList
+        document.getElementById('tails').classList.add('active');
+        if (oppositeElementClassList.contains('active')){
+            oppositeElementClassList.remove('active')
+        }
+    }
+}
+
+function onBetSubmit(betValue){
+    if(document.getElementById('tails').classList.contains('active')){
+        return socket.emit('parier', 'pile', betValue);
+    }
+    return socket.emit('parier', 'face', betValue);
+}
+
+socket.on('solde', (value)=>{
+    user_points = value;
+
+    const betButtonArray = Array.from(document.getElementsByClassName('betButton'));
+    betButtonArray.forEach((button)=>{
+        if (button.innerHTML > user_points){
+            button.setAttribute("disabled", true)
+        }
+        
+    })
+
+    userPointDisplay.innerHTML = `Vos points restants: ${user_points}`;
+})
+
+socket.on('game start', ()=>{
+    document.getElementById('gameWindow').classList.remove('d-none');
+})
+
+socket.on('user counter', (message)=>{
+    userCountMessage.innerHTML = message;
+})
 
 // event listeners
 
