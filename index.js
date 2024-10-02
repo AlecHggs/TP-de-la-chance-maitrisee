@@ -71,7 +71,7 @@ io.on('connection', (socket) => {
         console.log({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
       } else{
         const betGameMessage = `${socketUser[socket.id]} vous n'avez pas assez pour parier ${somme} sur ${pileOuFace}.`;
-        socket.emit('toast', 'primary', betGameMessage);
+        socket.emit('toast', 'danger', betGameMessage);
         socket.emit('solde', solde[socketUser[socket.id]]);
       }
     }else{
