@@ -122,7 +122,7 @@ io.on('connection', (socket) => {
     const resultMessage = `Le résultat est ${result}`;
     io.to(roomId).emit('result', resultMessage);
     var soldeBefore = solde
-    for(bet in betList){
+    for(var bet in betList){
       if(bet["side"]==result){
         solde[socketUser[bet["user"]]] += bet["somme"] * 2
       }else{
