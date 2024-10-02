@@ -70,7 +70,6 @@ io.on('connection', (socket) => {
           const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
           io.to(roomId).emit('toast', 'primary', betGameMessage);
           betList.push({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
-          console.log({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
         } else{
           const betGameMessage = `${socketUser[socket.id]} vous n'avez pas assez pour parier ${somme} sur ${pileOuFace}.`;
           socket.emit('toast', 'danger', betGameMessage);
@@ -82,7 +81,6 @@ io.on('connection', (socket) => {
         socket.emit('solde', solde[socketUser[socket.id]]);
         const betGameMessage = `${socketUser[socket.id]} a parié ${somme} sur ${pileOuFace}.`;
         betList.push({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
-        console.log({"user":socket.id, "round" : round, "side" : pileOuFace, "amount": somme});
         io.to(roomId).emit('toast', 'primary', betGameMessage);
       }
     }else{
@@ -120,7 +118,7 @@ io.on('connection', (socket) => {
   }
 
   function computeResults(){
-    result = Math.random() < 0.5 ? 'pile' : 'face';
+    var result = Math.random() < 0.5 ? 'pile' : 'face';
     const resultMessage = `Le résultat est ${result}`;
     io.to(roomId).emit('result', resultMessage);
     soldeBefore = solde
