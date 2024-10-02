@@ -93,15 +93,16 @@ io.on('connection', (socket) => {
   function playGame(round) {
     if (round <= 2) {
       console.log("round start");
-      io.to(roomId).emit('round start', roundStartDelay, "Temps restant");
+      io.to(roomId).emit('round start', roundStartDelay, "Temps restant ");
       gameStarted = true
       setTimeout(() => {
         console.log("End");
-        io.to(roomId).emit('round start', roundEndDelay, "Prochaine partie dans");
+        io.to(roomId).emit('round start', roundEndDelay, "Prochaine partie dans ");
         gameStarted = false
         setTimeout(() => {
           console.log("résultats");
-          playGame(round++);
+          round++
+          playGame(round);
         }, roundEndDelay); // Attend 30 secondes après "End"
       }, roundStartDelay); // Attend 50 secondes après "start"
     }
